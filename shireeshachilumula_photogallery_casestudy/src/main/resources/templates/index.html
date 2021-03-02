@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="ISO-8859-1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Spring Boot Gallery App</title>
+	<link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="/style.css">
+	<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.0.4/popper.js"></script>
+	<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="main_container">
+	<div class="display_time">
+		<div id="datetime">8:30pm</div>
+	</div>
+	<div class="dropdown">
+		<button th:if="${#request.userPrincipal == null}"  class="btn btn-info dropdown-toggle" type="button" id="menuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Menu
+		</button>
+		<button th:if="${#request.userPrincipal != null}" class="btn btn-info dropdown-toggle" type="button" id="menuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			[[${#request.userPrincipal.principal.fullName}]]
+		</button>
+		<div class="dropdown-menu" aria-labelledby="menuButton">
+			<a class="dropdown-item" th:href="@{/}">Home</a>
+			<a class="dropdown-item" th:href="@{/galleries}">Galleries</a>
+			<a th:if="${#request.userPrincipal != null}" class="dropdown-item" th:href="@{/settings}">Settings</a>
+			<a th:if="${#request.userPrincipal == null}" class="dropdown-item" th:href="@{/login}">Sign In</a>
+			<a th:if="${#request.userPrincipal != null}" class="dropdown-item" th:href="@{/logout}">Sign out</a>
+		</div>
+	</div>
+</div>
+
+<div class="sub_container">
+	<div class="centerContent">
+		<p class="homeText">Home for your</p>
+		<p class="homeText">Memories</p>
+		<p></p>
+		<button th:if="${#request.userPrincipal == null}" type="button" class="btn btn-primary btn-lg" th:onclick="|window.location.href='@{/register}'|">Register</button>
+		<p></p>
+		<button type="button" class="btn btn-primary btn-lg" th:onclick="|window.location.href='@{/galleries}'|">Go to Photos</button>
+	</div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/dropdown.js}"></script>
+</body>
+</html>
