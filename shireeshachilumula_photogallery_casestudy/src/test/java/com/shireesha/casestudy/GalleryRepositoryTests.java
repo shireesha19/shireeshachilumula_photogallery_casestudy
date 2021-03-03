@@ -10,12 +10,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import com.shireesha.casestudy.models.Gallery;
 import com.shireesha.casestudy.models.User;
 import com.shireesha.casestudy.repositories.GalleryRepository;
 import com.shireesha.casestudy.repositories.UserRepository;
 
 @DataJpaTest
+
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(false)
 public class GalleryRepositoryTests {
@@ -30,12 +32,22 @@ public class GalleryRepositoryTests {
 	public void testfindByNameContainingAndUsersIn() {
 		String exepected="Animals";
 		User existinguser = userRepo.findByEmail("siri@gmail.com");
+		if(existinguser!=null)
+		{
 		String name=existinguser.getEmail();
 		List<User> users=Arrays.asList(existinguser);
 		List<Gallery> gallery=gRepo.findByNameContainingAndUsersIn(exepected, users);
-		String actual=gallery.get(0).getName();
-	    boolean result=gallery.contains("Animals");
-	    assertEquals(actual,exepected);
+		String actual="";
+		if(gallery.get(0)==null&& gallery.size()==1)
+		{
+			assertNotEquals(actual,exepected);
+		}
+		else
+		{
+			actual=gallery.get(0).getName();
+		    assertEquals(actual,exepected);
+		}
+		}
 	  
 	}
 }

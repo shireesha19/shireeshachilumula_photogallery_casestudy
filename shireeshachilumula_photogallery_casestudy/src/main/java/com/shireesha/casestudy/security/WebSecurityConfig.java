@@ -6,6 +6,7 @@ import com.shireesha.casestudy.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,10 +20,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private DataSource dataSource;
-
-    @Bean
+	@Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
     }
@@ -44,10 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
     }
+   
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+        .csrf().disable().authorizeRequests()
                 .antMatchers("/global/**", "/static/**").permitAll()
                 .antMatchers("/galleries").authenticated()
                 .anyRequest().permitAll()
@@ -62,10 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
              // Handle logout
     			.logout().invalidateHttpSession(true).clearAuthentication(true)
     			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-    			.logoutSuccessUrl("/logoutsuccess").permitAll();
+    			.logoutSuccessUrl("/logoutsuccess").permitAll()
     			// Handle error page
-                //.and()
-                //.exceptionHandling().accessDeniedPage("/error");
+                .and()
+                .exceptionHandling().accessDeniedPage("/error");
 
     }
 }

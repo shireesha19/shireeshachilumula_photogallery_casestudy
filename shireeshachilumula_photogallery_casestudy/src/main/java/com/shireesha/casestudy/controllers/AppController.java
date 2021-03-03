@@ -52,13 +52,45 @@ public class AppController {
 		return "login";
 	}
 
-	// redirecting to user sign up Form
+	// redirecting to user Registration Form
 	@GetMapping("/register")
 	public String showRegistrationForm(Model model) {
 		User user = new User();
 		model.addAttribute("user", user);
 		return "signup_form";
 	}
+	// processing user registration
+		@PostMapping("/process_register")
+		public String processRegister(@Valid @ModelAttribute("user") User user, BindingResult result,
+				@RequestParam("email") String email, Model model, RedirectAttributes attr) {
+			User existinguser = userRepo.findByEmail(email);
+			// checking email id already exists or not
+
+			if (!result.hasErrors()) {
+
+				if (existinguser == null) {
+					// implementation of
+					// Spring's PasswordEncoder interface //that uses the BCrypt strong hashing
+					// function to encode the password
+					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+					String encodedPassword = passwordEncoder.encode(user.getPassword());
+					user.setPassword(encodedPassword);					
+					// saving user registration details into database
+					userRepo.save(user);
+					return "register_success";
+				} else {
+					model.addAttribute("message", "This Email Id already exists!");
+					return "signup_form";
+
+				}
+			} else {
+				attr.addFlashAttribute(BINDINGRESULT_USER, result);
+				System.out.println("error");
+				return "signup_form";
+			}
+
+		}
+
 
 	@PostMapping("/settings")
 	public String userSettings(Settings settings, Model model) {
@@ -85,64 +117,26 @@ public class AppController {
 		return "settings";
 	}
 
-	// processing user registration
-	@PostMapping("/process_register")
-    public String processRegister( @Valid @ModelAttribute("user") User user,BindingResult result,Model model ,RedirectAttributes attr) {
-       // User existinguser = userRepo.findByEmail(email);
-        //checking email id already exists or not
-		
-		  if (!result.hasErrors()) { 
-			  
-			  if (existinguser == null) { 
-			  // implementation of
-		  //Spring's PasswordEncoder interface //that uses the BCrypt strong hashing
-		 // function to encode the password 
-		  BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); String encodedPassword =
-		  passwordEncoder.encode(user.getPassword());
-		  user.setPassword(encodedPassword); Settings settings = new Settings();
-		  user.setSettings(settings); settings.setUser(user); //
-		  settingsRepository.save(settings); //saving user registration details into
-		 // database
-		  userRepo.save(user);
-		  return "register_success"; 
-		  }
-		  else {
-		  model.addAttribute("message", "This email already exists!"); 
-		  return
-		  "signup_form";
-		  
-		  } } 
-		  else { 
-			  attr.addFlashAttribute(BINDINGRESULT_USER, result);
-			  System.out.println("error");
-			  return "signup_form";
-		  }
-		 
-        if(result.hasErrors()) {
-        	attr.addFlashAttribute(BINDINGRESULT_USER, result);
-        	System.out.println("error");
-        	return "signup_form";
-        }
-        else
-        	return "";
-        
-       
-    }
-
-	/*
-	 * @ResponseStatus(HttpStatus.BAD_REQUEST)
-	 * 
-	 * @ExceptionHandler(MethodArgumentNotValidException.class) public Map<String,
-	 * String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-	 * Map<String, String> errors = new HashMap<>();
-	 * ex.getBindingResult().getAllErrors().forEach((error) -> { String fieldName =
-	 * ((FieldError) error).getField(); String errorMessage =
-	 * error.getDefaultMessage(); errors.put(fieldName, errorMessage); }); return
-	 * errors; }
-	 */
+	
+	
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  
+	  @ExceptionHandler(MethodArgumentNotValidException.class) public Map<String,
+	  String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+	  Map<String, String> errors = new HashMap<>();
+	  ex.getBindingResult().getAllErrors().forEach((error) -> { String fieldName =
+	  ((FieldError) error).getField(); String errorMessage =
+	  error.getDefaultMessage(); errors.put(fieldName, errorMessage); }); return
+	  errors; }
+	 
 	// processing logout page
 	@GetMapping("/logoutsuccess")
 	public String showLogoutPage() {
 		return "logout";
+	}
+
+	@GetMapping("/errorpage")
+	public String showErrorPage() {
+		return "error_page";
 	}
 }

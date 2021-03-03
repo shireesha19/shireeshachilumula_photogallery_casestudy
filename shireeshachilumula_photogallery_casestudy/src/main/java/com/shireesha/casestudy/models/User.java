@@ -1,9 +1,12 @@
 package com.shireesha.casestudy.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.shireesha.casestudy.annotations.EmailConstraint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,26 +14,30 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
-	//test
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false, unique = true, length = 45)
+	@Column(nullable = false, unique = true)
 	@Size(min = 2, max = 20,message = "Email is mandatory")
-	@NotNull
+	//@EmailConstraint
 	private String email;
 	
-	@Column(nullable = false, length = 64)
+	@Column(nullable = false)
+	
+	@Size(min = 6, max = 100,message = "Password must be between 6 and 50 characters")
+	@NotNull(message = "Password must be between 6 and 50 characters")
+	
 	private String password;
 	
-	@Column(name = "first_name", nullable = false, length = 20)
-	@Size(min = 2, max = 20 ,message = "First Name is mandatory")
+	@Column(name = "first_name", nullable = false)
+	@Size(min = 2, max = 20 ,message = "First Name must be between 2 and 20 characters")
 	@NotNull
 	private String firstName;
 	
 	@Column(name = "last_name", nullable = false, length = 20)
-	@Size(min = 2, max = 20,message = "Last Name is mandatory")
+	@Size(min = 2, max = 20,message = "Last Name must be between 2 and 20 characters")
 	@NotNull
 	private String lastName;
 

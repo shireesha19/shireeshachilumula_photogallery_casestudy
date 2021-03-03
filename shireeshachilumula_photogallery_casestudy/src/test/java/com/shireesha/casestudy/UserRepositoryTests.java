@@ -1,7 +1,9 @@
 package com.shireesha.casestudy;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
+//import static org.assertj.core.api.Assertions.
 import com.shireesha.casestudy.models.User;
 import com.shireesha.casestudy.repositories.UserRepository;
 
@@ -43,13 +45,13 @@ public class UserRepositoryTests {
 	@Test
 	public void testFindByEmail() {
 		String email = "testuser@demo.com";
-		//User user = new User();
-		//user.setEmail(email);
-		//user.setPassword("password");
-		//user.setFirstName("test");
-		//user.setLastName("user");
-		//User savedUser = repo.save(user);
+		
 		User foundUser = repo.findByEmail(email);
-		assertThat(foundUser.getEmail()).isEqualTo(email);
+		if(foundUser!=null) {
+			assertThat(foundUser.getEmail()).isEqualTo(email);
+		}
+		else
+			assertThatNullPointerException();
+		
 	}
 }

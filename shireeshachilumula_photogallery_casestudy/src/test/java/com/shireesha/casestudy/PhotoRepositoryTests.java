@@ -19,6 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -45,17 +47,26 @@ class PhotoRepositoryTests {
 		MockMultipartFile image = new MockMultipartFile("image", "", "application/json", "{\"image\": \"C:\\Users\\Public\\Pictures\\Sample Pictures\\Penguins.jpg\"}".getBytes());
         
 		String ex="";
-		User existinguser = userRepo.findByEmail("siri@gmail.com");
-		String name=existinguser.getEmail();
-		List<User> users=Arrays.asList(existinguser);
-		String actual=image.getName();
-		List<Photo> photos = repo.findByNameContainingAndUsersIn("e",users);
-		if(photos.size()>0) {
-			 ex=photos.get(0).getName();
-		}
+		User existinguser = userRepo.findByEmail("siri1@gmail.com");
+		if(existinguser!=null) {
+			
+			List<User> users=Arrays.asList(existinguser);
+			String actual=image.getName();
+			List<Photo> photos = repo.findByNameContainingAndUsersIn("e",users);
+			if(photos.size()==1&& photos.get(0)==null)
+			{
+				assertNotEquals(actual,ex);
+			}
+			else {
+				 ex=photos.get(0).getName();
+				 assertEquals(actual,ex);
+			}
+	}
+	else {
+		assertThatNullPointerException();
+	}
 		
 		
-		assertNotEquals(actual,ex);
 	}
 
 }

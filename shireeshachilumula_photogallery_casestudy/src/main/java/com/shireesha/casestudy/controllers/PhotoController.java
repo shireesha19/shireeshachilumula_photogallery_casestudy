@@ -47,6 +47,7 @@ public class PhotoController {
     }
 
 
+    //Retrieving all photos for user
     @GetMapping("/photos")
     public String getAllPhotos(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,6 +57,7 @@ public class PhotoController {
         return "user_photos";
     }
 
+  //Retrieving today photos for user
     @GetMapping("/photos/today")
     public String todayPhotos(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,6 +65,30 @@ public class PhotoController {
         Date startdate = new Date();
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date endDate = Date.from(LocalDate.now().minusDays(1).atStartOfDay(defaultZoneId).toInstant());
+        List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(endDate, startdate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
+        model.addAttribute("photos", photos);
+        return "user_photos";
+    }
+
+	// Retrieving last week photos
+    @GetMapping("/photos/lastweek")
+    public String lastWeekPhotos(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Date startdate = new Date();
+        LocalDate now = LocalDate.now();
+        //getting lastweek start and end date
+        LocalDate weekStart = now.minusDays(7+now.getDayOfWeek().getValue()-1);
+        LocalDate weekEnd = now.minusDays(now.getDayOfWeek().getValue());
+          
+        //The ZoneId is an identifier used to represent different zones
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        startdate=Date.from(weekStart.atStartOfDay(defaultZoneId).toInstant());
+        Date endDate=Date.from(weekEnd.atStartOfDay(defaultZoneId).toInstant());
+      // System.out.println(startdate);
+      // System.out.println(endDate);
+       
+      //  Date endDate = Date.from(LocalDate.now().minusDays(1).atStartOfDay(defaultZoneId).toInstant());
         List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(endDate, startdate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
         model.addAttribute("photos", photos);
         return "user_photos";
