@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @SuppressWarnings("unused")
@@ -51,6 +55,21 @@ public class AppController {
 	public String loginUser(Model model) {
 		return "login";
 	}
+	
+//	@GetMapping("/login-error")
+//    public String login(HttpServletRequest request, Model model) {
+//        HttpSession session = request.getSession(false);
+//        String errorMessage = null;
+//        if (session != null) {
+//            AuthenticationException ex = (AuthenticationException) session
+//                    .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+//            if (ex != null) {
+//                errorMessage = ex.getMessage();
+//            }
+//        }
+//        model.addAttribute("errorMessage", errorMessage);
+//        return "login";
+//    }
 
 	// redirecting to user Registration Form
 	@GetMapping("/register")

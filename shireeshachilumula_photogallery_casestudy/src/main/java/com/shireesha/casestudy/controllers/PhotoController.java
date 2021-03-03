@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Controller
 public class PhotoController {
     @Autowired
@@ -63,6 +64,7 @@ public class PhotoController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Date startdate = new Date();
+        //The ZoneId is an identifier used to represent different zones
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date endDate = Date.from(LocalDate.now().minusDays(1).atStartOfDay(defaultZoneId).toInstant());
         List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(endDate, startdate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
@@ -94,12 +96,13 @@ public class PhotoController {
         return "user_photos";
     }
 
-
+   //search photos from database
     @PostMapping("/photo/search")
     public String searchImages(@RequestParam("imageName") String name, Model model) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            //Retrieving list of photos for specific user
             List<Photo> photos = photoRepo.findByNameContainingAndUsersIn(name, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
             model.addAttribute("photos", photos);
             return "user_photos";
@@ -131,7 +134,7 @@ public class PhotoController {
             throw new GalleryResourceException("Photo with id: " + imageId +  " Not Found", exc);
         }
     }
-
+    //uploading images
     @ExceptionHandler(UnHandledExceptions.class)
     @PostMapping("/image/upload")
     public String handleImagePost(@RequestParam("imagefile") MultipartFile file){
@@ -142,10 +145,12 @@ public class PhotoController {
             throw new GalleryResourceException("Gallery with id: Not Found", exc);
         }
     }
-
+   //Deleting photos 
+    //It will also  remove photos associated with gallery
     @PostMapping("/image/{id}/delete")
     public String deleteGallery(@PathVariable String id){
         try {
+        	//
             Photo photo = photoRepo.findById(Long.valueOf(id)).get();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

@@ -11,6 +11,7 @@ import com.shireesha.casestudy.models.Photo;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 	 List<Photo> findByNameContainingAndUsersIn(String name, List<User> user);
 
@@ -18,6 +19,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
 	 List<Photo> findAllByTakenOnBetweenAndUsersIn(Date takeOnStart, Date takeOnEnd, List<User> user);
 
-	 @Query(DBQueries.PHOTORANGEQUERY) List<Photo>
-	 findAllWithTakenOnBefore(@Param("takenOn") Date takenOn);
+	/// @Query(DBQueries.PHOTORANGEQUERY) List<Photo>
+	// findAllWithTakenOnBefore(@Param("takenOn") Date takenOn);
 }

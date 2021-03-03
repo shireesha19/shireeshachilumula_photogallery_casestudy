@@ -1,16 +1,14 @@
 package com.shireesha.casestudy.models;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import com.shireesha.casestudy.annotations.EmailConstraint;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "users")
 public class User {
@@ -26,8 +24,8 @@ public class User {
 	
 	@Column(nullable = false)
 	
-	@Size(min = 6, max = 100,message = "Password must be between 6 and 50 characters")
-	@NotNull(message = "Password must be between 6 and 50 characters")
+	@Size(min = 6, max = 100,message = "Password must be between 6 and 20 characters")
+	@NotNull(message = "Password must be between 6 and 20 characters")
 	
 	private String password;
 	

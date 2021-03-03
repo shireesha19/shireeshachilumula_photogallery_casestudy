@@ -1,7 +1,5 @@
 package com.shireesha.casestudy.security;
 
-import javax.sql.DataSource;
-
 import com.shireesha.casestudy.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -58,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .defaultSuccessUrl("/galleries")
                 .permitAll()
+               //.failureUrl("/login-error")
                 .and()
              // Handle logout
     			.logout().invalidateHttpSession(true).clearAuthentication(true)
