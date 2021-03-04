@@ -37,7 +37,7 @@
 		<div>
 			<h1>Sign Up</h1>
 		</div>
-		<form th:action="@{/process_register}" th:object="${user}"
+		<form name="signup" th:action="@{/process_register}" th:object="${user}"
 			  method="post" style="max-width: 600px; margin: 0 auto;" >
 			  <p>
 				[[${message}]]
@@ -48,7 +48,7 @@
 					<label class="col-4 col-form-label">E-mail: </label>
 					<div class="col-8">
 						<input type="email" th:field="*{email}" class="form-control" required />
-						<p class="error"  th:errors="*{email}">Name Error</p>
+						<p class="error"  th:errors="*{email}" id="emailid">Name Error</p>
 					</div>
 				</div>
 
@@ -80,7 +80,7 @@
 
 				<div>
 					<p></p>
-					<button type="submit" class="btn btn-primary">Sign Up</button>
+					<button type="submit" class="btn btn-primary" >Sign Up</button>
 				</div>
 			</div>
 		</form>
@@ -89,7 +89,7 @@
 </div>
 
 <script type="text/javascript" th:src="@{/js/dropdown.js}"></script>
-
+<script type="text/javascript" th:src="@{/js/validateemail.js}"></script>
 
 </body>
 </html>

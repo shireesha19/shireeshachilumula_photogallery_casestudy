@@ -2,6 +2,7 @@ package com.shireesha.casestudy.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import com.shireesha.casestudy.annotations.EmailConstraint;
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ public class User {
 	private Long id;
 	
 	@Column(nullable = false, unique = true)
-	@Size(min = 2, max = 20,message = "Email is mandatory")
+	//@Size(min = 2, max = 20,message = "Email is mandatory")
 	//@EmailConstraint
+	@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message="Email address is invalid")
 	private String email;
 	
 	@Column(nullable = false)
