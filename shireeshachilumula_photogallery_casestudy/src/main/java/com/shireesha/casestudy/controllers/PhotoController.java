@@ -138,8 +138,11 @@ public class PhotoController {
     @PostMapping("/image/upload")
     public String handleImagePost(@RequestParam("imagefile") MultipartFile file){
         try {
+        	
+        	
             photoService.saveImage(file);
             return "redirect:/photos";
+        	
         } catch (GalleryResourceException exc) {
             throw new GalleryResourceException("Gallery with id: Not Found", exc);
         }

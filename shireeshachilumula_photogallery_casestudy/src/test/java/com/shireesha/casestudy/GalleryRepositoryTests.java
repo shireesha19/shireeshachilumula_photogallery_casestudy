@@ -20,6 +20,7 @@ import com.shireesha.casestudy.models.User;
 import com.shireesha.casestudy.repositories.GalleryRepository;
 import com.shireesha.casestudy.repositories.UserRepository;
 
+@SuppressWarnings("unused")
 @DataJpaTest
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -32,6 +33,7 @@ public class GalleryRepositoryTests {
 	@Autowired
 	private GalleryRepository gRepo;
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testfindByNameContainingAndUsersIn() {
 		String exepected="birds";

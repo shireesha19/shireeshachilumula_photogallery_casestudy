@@ -40,6 +40,7 @@ public class PhotoServiceImpl implements PhotoService{
             User user=userRepo.findByEmail(userDetails.getUsername());
             Gallery gallery = galleryRepository.findById(galleryId).get();
             List<Photo> galleryPhotos = gallery.getGalleryPhotos();
+            if(!file.isEmpty()) {
             Byte[] byteObjects = new Byte[file.getBytes().length];
             int i = 0;
             for (byte b : file.getBytes()){
@@ -58,6 +59,7 @@ public class PhotoServiceImpl implements PhotoService{
             gallery.setGalleryPhotos(galleryPhotos);
             photoRepo.save(photo);
 //            galleryRepository.save(gallery);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,6 +72,7 @@ public class PhotoServiceImpl implements PhotoService{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             User user=userRepo.findByEmail(userDetails.getUsername());
+            if(!file.isEmpty()) {
             Byte[] byteObjects = new Byte[file.getBytes().length];
             int i = 0;
             for (byte b : file.getBytes()){
@@ -84,6 +87,7 @@ public class PhotoServiceImpl implements PhotoService{
             photos.add(photo);
             user.setUserPhotos(photos);
             photoRepo.save(photo);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -93,7 +93,10 @@ public class AppController {
 					// function to encode the password
 					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					String encodedPassword = passwordEncoder.encode(user.getPassword());
-					user.setPassword(encodedPassword);					
+					user.setPassword(encodedPassword);		
+					Settings settings = new Settings();
+		            user.setSettings(settings);
+		            settings.setUser(user);
 					// saving user registration details into database
 					userRepo.save(user);
 					return "register_success";
