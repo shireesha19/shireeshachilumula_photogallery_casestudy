@@ -9,6 +9,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import com.shireesha.casestudy.models.Gallery;
@@ -30,24 +34,31 @@ public class GalleryRepositoryTests {
 	
 	@Test
 	public void testfindByNameContainingAndUsersIn() {
-		String exepected="Animals";
+		String exepected="birds";
+		String actual=null;
 		User existinguser = userRepo.findByEmail("siri@gmail.com");
 		if(existinguser!=null)
 		{
 		String name=existinguser.getEmail();
 		List<User> users=Arrays.asList(existinguser);
 		List<Gallery> gallery=gRepo.findByNameContainingAndUsersIn(exepected, users);
-		String actual="";
-		if(gallery.get(0)==null&& gallery.size()==1)
+		//String actual="";
+		System.out.println(gallery );
+		System.out.println(gallery.size());
+		if(!gallery.isEmpty())
 		{
+			actual=gallery.get(0).getName().toLowerCase();
+			assertThat(actual).isEqualTo(exepected);
+		}
+        else
+        {
+        	
 			assertNotEquals(actual,exepected);
+        	
+        }
 		}
 		else
-		{
-			actual=gallery.get(0).getName();
-		    assertEquals(actual,exepected);
-		}
-		}
-	  
+		//assertThatExceptionOfType(null)
+			assertThatNullPointerException();
 	}
 }

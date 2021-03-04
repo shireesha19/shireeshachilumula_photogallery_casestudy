@@ -21,6 +21,7 @@ public class User {
 	@Column(nullable = false, unique = true)
 	//@Size(min = 2, max = 20,message = "Email is mandatory")
 	//@EmailConstraint
+	//regular expression for email
 	@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message="Email address is invalid")
 	private String email;
 	
@@ -41,6 +42,7 @@ public class User {
 	@NotNull
 	private String lastName;
 
+	//joining users and galleries table
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "user_galleries",
@@ -48,13 +50,7 @@ public class User {
 			inverseJoinColumns = { @JoinColumn(name = "gallery_id") })
 	private List<Gallery> userGalleries = new ArrayList<>();
 
-	public List<Photo> getUserPhotos() {
-		return userPhotos;
-	}
-
-	public void setUserPhotos(List<Photo> userPhotos) {
-		this.userPhotos = userPhotos;
-	}
+	//joining users and photos table
 
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
@@ -63,12 +59,21 @@ public class User {
 			inverseJoinColumns = { @JoinColumn(name = "photo_id") })
 	private List<Photo> userPhotos = new ArrayList<>();
 
+	//joining users and settings table
 	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinTable( name = "user_settings",
 			joinColumns = { @JoinColumn(name =
 					"user_id") }, inverseJoinColumns = { @JoinColumn(name = "settings_id") })
 	private Settings settings ;
 
+	
+	public List<Photo> getUserPhotos() {
+		return userPhotos;
+	}
+
+	public void setUserPhotos(List<Photo> userPhotos) {
+		this.userPhotos = userPhotos;
+	}
 	public Long getId() {
 		return id;
 	}

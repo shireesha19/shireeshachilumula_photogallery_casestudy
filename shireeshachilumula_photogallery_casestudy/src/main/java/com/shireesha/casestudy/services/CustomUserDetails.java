@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.shireesha.casestudy.models.User;
 
+@SuppressWarnings("unused")
 public class CustomUserDetails implements UserDetails {
 
 	/**

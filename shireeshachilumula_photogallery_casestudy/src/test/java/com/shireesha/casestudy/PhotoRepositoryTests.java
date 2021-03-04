@@ -24,9 +24,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(false)
@@ -53,13 +58,21 @@ class PhotoRepositoryTests {
 			List<User> users=Arrays.asList(existinguser);
 			String actual=image.getName();
 			List<Photo> photos = repo.findByNameContainingAndUsersIn("e",users);
-			if(photos.size()==1&& photos.get(0)==null)
+			if(photos.isEmpty())
 			{
 				assertNotEquals(actual,ex);
 			}
 			else {
-				 ex=photos.get(0).getName();
-				 assertEquals(actual,ex);
+				for(int i=0;i<photos.size();i++) {
+					ex=photos.get(i).getName();
+	        		if(actual==ex)
+	        		{
+	        	    assertThat(actual).isEqualTo(ex);
+	        		}
+	        		else
+	        		assertNotEquals(actual,ex);
+				}
+				 
 			}
 	}
 	else {
@@ -67,6 +80,41 @@ class PhotoRepositoryTests {
 	}
 		
 		
+	}
+	@Test
+	public void testfindAllByTakenOnBetweenAndUsersIn() {
+		User existinguser = userRepo.findByEmail("siri@gmail.com");
+		
+		if(existinguser!=null) {
+			List<User> users=Arrays.asList(existinguser);
+			Date dt1=new Date();
+			String exepected="birds1.jpg";
+			String actual=null;
+			LocalDate now = LocalDate.now();
+			ZoneId defaultZoneId = ZoneId.systemDefault();
+	        Date endDate = Date.from(LocalDate.now().minusDays(2).atStartOfDay(defaultZoneId).toInstant());
+	        List<Photo> photos = repo.findAllByTakenOnBetweenAndUsersIn(endDate, dt1, users);	
+	        System.out.println(photos.size());
+	        if(!photos.isEmpty())
+			{
+	        	for(int i=0;i<photos.size();i++) {
+	        		actual=photos.get(i).getName();
+	        		if(actual==exepected)
+	        		{
+	        	    assertThat(actual).isEqualTo(exepected);
+	        		}
+	        		else
+	        		assertNotEquals(actual,exepected);
+	        	}
+			}
+	        else
+	        {
+				assertNotEquals(actual,exepected);
+	        	
+	        }
+		}
+		else
+			assertThatNullPointerException();
 	}
 
 }

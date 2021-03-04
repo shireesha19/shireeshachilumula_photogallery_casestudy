@@ -26,7 +26,7 @@ public class Gallery {
     @ManyToMany(mappedBy = "userGalleries")
     private Set<User> users = new HashSet<>();
 
-
+ //joining galleries and photos table
     @ManyToMany
     @JoinTable( name = "photo_galleries",
             joinColumns = { @JoinColumn(name =
