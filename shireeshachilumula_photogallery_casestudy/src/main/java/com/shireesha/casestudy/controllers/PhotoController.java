@@ -23,7 +23,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
@@ -66,8 +71,15 @@ public class PhotoController {
         Date startdate = new Date();
         //The ZoneId is an identifier used to represent different zones
         ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date endDate = Date.from(LocalDate.now().minusDays(1).atStartOfDay(defaultZoneId).toInstant());
-        List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(endDate, startdate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
+       // Date start=
+       LocalDateTime  endDate= LocalDate.now().atTime(LocalTime.MAX);
+       LocalDateTime  startDate= LocalDate.now().atTime(LocalTime.MIN);
+       Date sDate=Date.from(startDate.toInstant(OffsetDateTime.now().getOffset()));
+       Date eDate=   Date.from(endDate.toInstant(OffsetDateTime.now().getOffset()));
+       System.out.println(sDate);
+       System.out.println(eDate);
+     // Date endDate = Date.from(LocalDate.now().minusDays(1).atStartOfDay(defaultZoneId).toInstant());
+        List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(sDate, eDate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
         model.addAttribute("photos", photos);
         return "user_photos";
     }
@@ -80,17 +92,21 @@ public class PhotoController {
         Date startdate = new Date();
         LocalDate now = LocalDate.now();
         //getting lastweek start and end date
-        LocalDate weekStart = now.minusDays(7+now.getDayOfWeek().getValue()-1);
-        LocalDate weekEnd = now.minusDays(now.getDayOfWeek().getValue());
+        LocalDateTime  endDate= LocalDate.now().minusDays(7).atTime(LocalTime.MAX);
+        LocalDateTime  startDate= LocalDate.now().atTime(LocalTime.MIN);
+        Date sDate=Date.from(startDate.toInstant(OffsetDateTime.now().getOffset()));
+        Date eDate=   Date.from(endDate.toInstant(OffsetDateTime.now().getOffset()));
+        //LocalDate weekStart = now.minusDays(7+now.getDayOfWeek().getValue()-1);
+        //LocalDate weekEnd = now.minusDays(now.getDayOfWeek().getValue());
           
         //The ZoneId is an identifier used to represent different zones
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        startdate=Date.from(weekStart.atStartOfDay(defaultZoneId).toInstant());
-        Date endDate=Date.from(weekEnd.atStartOfDay(defaultZoneId).toInstant());
+        //ZoneId defaultZoneId = ZoneId.systemDefault();
+        //startdate=Date.from(weekStart.atStartOfDay(defaultZoneId).toInstant());
+       // Date endDate=Date.from(weekEnd.atStartOfDay(defaultZoneId).toInstant());
       System.out.println(startdate);
        System.out.println(endDate);
        
-        List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(endDate, startdate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
+        List<Photo> photos = photoRepo.findAllByTakenOnBetweenAndUsersIn(eDate, sDate, Arrays.asList(userRepo.findByEmail(userDetails.getUsername())));
         model.addAttribute("photos", photos);
         return "user_photos";
     }
